@@ -1,123 +1,123 @@
-# ArtGallery Online
+# Art Gallery
 
-## Description | Opis
+## English
 
-EN: ArtGallery Online is a web-based platform for artists to showcase their work and connect with art enthusiasts. The system features user roles (Admin, Staff, Artists, and Visitors), artwork management, exhibitions, and interactive features like comments and ratings.
+### Installation
+1. Place the project in your XAMPP's htdocs folder
+2. Create a MySQL database named `art_gallery`
+3. Import the `database.sql` file into your database
+4. Make sure the following directories exist and have write permissions (777):
+   - `/uploads/artworks`
+   - `/uploads/profiles`
+   - `/images`
 
-PL: ArtGallery Online to internetowa platforma umożliwiająca artystom prezentację swoich prac i nawiązywanie kontaktu z miłośnikami sztuki. System oferuje role użytkowników (Administrator, Personel, Artyści i Odwiedzający), zarządzanie dziełami sztuki, wystawami oraz funkcje interaktywne, takie jak komentarze i oceny.
+### Default Login Credentials
+- **Admin Account:**
+  - Username: admin
+  - Password: admin123
 
-## Features | Funkcje
+### User Roles
+1. **Regular User**
+   - Can browse artworks
+   - Can rate and comment on artworks
+   - Can follow artists
+   - Can edit their profile
 
-EN:
-- User authentication and authorization
-- Multiple user roles with different permissions
-- Artwork upload and management
-- Exhibition creation and management
-- Rating and commenting system
-- Responsive, modern design
-- Secure password handling
-- User profile management
+2. **Artist**
+   - All regular user features
+   - Can upload their artworks
+   - Can manage their artwork gallery
+   - Has a public artist profile
 
-PL:
-- Uwierzytelnianie i autoryzacja użytkowników
-- Wiele ról użytkowników z różnymi uprawnieniami
-- Przesyłanie i zarządzanie dziełami sztuki
-- Tworzenie wystaw i zarządzanie nimi
-- System ocen i komentarzy
-- Responsywny, nowoczesny design
-- Bezpieczne przechowywanie haseł
-- Zarządzanie profilami użytkowników
+3. **Admin**
+   - All artist features
+   - Can manage all users
+   - Can approve/reject artworks
+   - Can manage categories
+   - Can moderate comments
 
-## Installation | Instalacja
+### Using Pre-uploaded Images
+The system detected 23 images in the `/uploads/artworks` directory. To use these images:
 
-EN:
-1. Make sure you have XAMPP installed with PHP and MySQL
-2. Clone this repository to your XAMPP's htdocs folder
-3. Start Apache and MySQL services in XAMPP
-4. Import the database:
-   - Open phpMyAdmin (http://localhost/phpmyadmin)
-   - Create a new database named 'art_gallery'
-   - Import the `database.sql` file
-5. Access the application at http://localhost/projekt
+1. Log in as an artist or admin
+2. Go to the upload artwork page
+3. Fill in the artwork details:
+   - Title
+   - Description
+   - Category
+   - Price (optional)
+4. Select one of the pre-uploaded images
+5. Submit for approval
 
-PL:
-1. Upewnij się, że masz zainstalowany XAMPP z PHP i MySQL
-2. Sklonuj to repozytorium do folderu htdocs w XAMPP
-3. Uruchom usługi Apache i MySQL w XAMPP
-4. Zaimportuj bazę danych:
-   - Otwórz phpMyAdmin (http://localhost/phpmyadmin)
-   - Utwórz nową bazę danych o nazwie 'art_gallery'
-   - Zaimportuj plik `database.sql`
-5. Dostęp do aplikacji pod adresem http://localhost/projekt
+### File Requirements
+- Maximum file size: 5MB
+- Allowed formats: JPG, PNG, GIF
+- Recommended image dimensions: 1200x800 pixels
+- Images are automatically resized if needed
 
-## Default Admin Account | Domyślne Konto Administratora
+## Polski
 
-EN:
-- Username: admin
-- Password: admin123
+### Instalacja
+1. Umieść projekt w folderze htdocs serwera XAMPP
+2. Utwórz bazę danych MySQL o nazwie `art_gallery`
+3. Zaimportuj plik `database.sql` do bazy danych
+4. Upewnij się, że następujące katalogi istnieją i mają uprawnienia do zapisu (777):
+   - `/uploads/artworks`
+   - `/uploads/profiles`
+   - `/images`
 
-PL:
-- Nazwa użytkownika: admin
-- Hasło: admin123
+### Domyślne dane logowania
+- **Konto administratora:**
+  - Nazwa użytkownika: admin
+  - Hasło: admin123
 
-## User Roles | Role Użytkowników
+### Role użytkowników
+1. **Zwykły użytkownik**
+   - Może przeglądać dzieła sztuki
+   - Może oceniać i komentować dzieła
+   - Może obserwować artystów
+   - Może edytować swój profil
 
-EN:
-1. Admin:
-   - Manage all users
-   - Approve/reject artworks
-   - Manage exhibitions
-   - Full system access
+2. **Artysta**
+   - Wszystkie funkcje zwykłego użytkownika
+   - Może przesyłać swoje dzieła
+   - Może zarządzać swoją galerią
+   - Posiada publiczny profil artysty
 
-2. Staff (Curators):
-   - Manage exhibitions
-   - Review artworks
-   - Moderate comments
+3. **Administrator**
+   - Wszystkie funkcje artysty
+   - Może zarządzać użytkownikami
+   - Może zatwierdzać/odrzucać dzieła
+   - Może zarządzać kategoriami
+   - Może moderować komentarze
 
-3. Artists:
-   - Upload artworks
-   - Create/edit their profile
-   - Participate in exhibitions
+### Korzystanie z przesłanych zdjęć
+System wykrył 23 zdjęcia w katalogu `/uploads/artworks`. Aby je wykorzystać:
 
-4. Visitors:
-   - View artworks
-   - Rate and comment
-   - Follow artists
+1. Zaloguj się jako artysta lub administrator
+2. Przejdź do strony przesyłania dzieł
+3. Wypełnij szczegóły dzieła:
+   - Tytuł
+   - Opis
+   - Kategoria
+   - Cena (opcjonalnie)
+4. Wybierz jedno z przesłanych zdjęć
+5. Wyślij do zatwierdzenia
 
-PL:
-1. Administrator:
-   - Zarządzanie wszystkimi użytkownikami
-   - Zatwierdzanie/odrzucanie dzieł
-   - Zarządzanie wystawami
-   - Pełny dostęp do systemu
+### Wymagania dotyczące plików
+- Maksymalny rozmiar pliku: 5MB
+- Dozwolone formaty: JPG, PNG, GIF
+- Zalecane wymiary obrazów: 1200x800 pikseli
+- Obrazy są automatycznie skalowane w razie potrzeby
 
-2. Personel (Kuratorzy):
-   - Zarządzanie wystawami
-   - Przeglądanie dzieł
-   - Moderowanie komentarzy
-
-3. Artyści:
-   - Przesyłanie dzieł
-   - Tworzenie/edycja profilu
-   - Udział w wystawach
-
-4. Odwiedzający:
-   - Przeglądanie dzieł
-   - Ocenianie i komentowanie
-   - Obserwowanie artystów
-
-## Security | Bezpieczeństwo
-
-EN:
-- Passwords are hashed using PHP's password_hash()
-- SQL injection prevention using prepared statements
-- XSS prevention using htmlspecialchars()
-- CSRF protection
-- Secure session handling
-
-PL:
-- Hasła są hashowane przy użyciu password_hash()
-- Ochrona przed SQL injection przy użyciu prepared statements
-- Ochrona przed XSS przy użyciu htmlspecialchars()
-- Ochrona przed CSRF
-- Bezpieczne zarządzanie sesjami 
+### Struktura katalogów
+```
+projekt/
+├── images/              # System images (logo, default avatar)
+├── uploads/
+│   ├── artworks/       # Artwork images
+│   └── profiles/       # User profile pictures
+├── css/                # Stylesheets
+├── includes/           # PHP includes
+└── database.sql        # Database structure
+``` 

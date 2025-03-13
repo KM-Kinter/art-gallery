@@ -4,13 +4,29 @@ require_once 'includes/db.php';
 
 // Get featured artworks
 $featured_artworks = fetchAll(
-    "SELECT a.*, u.username, u.full_name, c.name as category_name 
+    "SELECT a.*, u.username, u.full_name, c.name as category_name,
+            (SELECT AVG(rating) FROM ratings r WHERE r.artwork_id = a.artwork_id) as avg_rating
      FROM artworks a 
      JOIN users u ON a.artist_id = u.user_id 
      JOIN categories c ON a.category_id = c.category_id 
-     WHERE a.status = 'featured' 
-     ORDER BY a.upload_date DESC 
+     WHERE a.status = 'approved'
+     ORDER BY (SELECT AVG(rating) FROM ratings r WHERE r.artwork_id = a.artwork_id) DESC, a.upload_date DESC
      LIMIT 6"
+);
+
+// Get featured artists
+$featured_artists = fetchAll(
+    "SELECT u.*, 
+            (SELECT COUNT(*) FROM artworks a WHERE a.artist_id = u.user_id AND a.status = 'approved') as artwork_count,
+            (SELECT AVG(r.rating) 
+             FROM ratings r 
+             JOIN artworks a ON r.artwork_id = a.artwork_id 
+             WHERE a.artist_id = u.user_id) as avg_rating
+     FROM users u 
+     WHERE u.role = 'artist' AND u.status = 'active'
+     HAVING artwork_count > 0
+     ORDER BY avg_rating DESC, artwork_count DESC
+     LIMIT 4"
 );
 ?>
 <!DOCTYPE html>
@@ -18,83 +34,76 @@ $featured_artworks = fetchAll(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo SITE_NAME; ?></title>
+    <title><?php echo SITE_NAME; ?> - Online Art Gallery</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://source.unsplash.com/random/1920x1080/?art');
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/hero-bg.jpg');
             background-size: cover;
             background-position: center;
             color: white;
             padding: 100px 0;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
-        .artwork-card {
+        .feature-card {
+            border: none;
             transition: transform 0.3s ease;
             margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        .artwork-card:hover {
+        .feature-card:hover {
             transform: translateY(-10px);
         }
         .artwork-image {
             height: 250px;
             object-fit: cover;
         }
+        .artist-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+        }
+        .rating-stars {
+            color: #ffc107;
+        }
         .category-badge {
             position: absolute;
             top: 10px;
             right: 10px;
         }
+        .cta-section {
+            background: #f8f9fa;
+            padding: 80px 0;
+            margin: 50px 0;
+        }
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #0d6efd;
+        }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="index.php"><?php echo SITE_NAME; ?></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="gallery.php">Gallery</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="exhibitions.php">Exhibitions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="artists.php">Artists</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <?php if (isset($_SESSION['user_id'])): ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="profile.php">My Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="logout.php">Logout</a>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="login.php">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="register.php">Register</a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/navbar.php'; ?>
 
     <!-- Hero Section -->
-    <section class="hero text-center">
+    <section class="hero-section text-center">
         <div class="container">
             <h1 class="display-4 mb-4">Welcome to <?php echo SITE_NAME; ?></h1>
-            <p class="lead mb-4">Discover amazing artworks from talented artists around the world</p>
-            <a href="gallery.php" class="btn btn-light btn-lg">Explore Gallery</a>
+            <p class="lead mb-5">Discover amazing artworks from talented artists around the world</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="gallery.php" class="btn btn-primary btn-lg px-4 gap-3">
+                    <i class="fas fa-images me-2"></i> Browse Gallery
+                </a>
+                <?php if (!isset($_SESSION['user_id'])): ?>
+                    <a href="register.php" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-user-plus me-2"></i> Join Now
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
     </section>
 
@@ -104,8 +113,8 @@ $featured_artworks = fetchAll(
         <div class="row">
             <?php foreach ($featured_artworks as $artwork): ?>
                 <div class="col-md-4">
-                    <div class="card artwork-card">
-                        <img src="<?php echo htmlspecialchars($artwork['image_path']); ?>" 
+                    <div class="card feature-card">
+                        <img src="<?php echo htmlspecialchars($artwork['file_path']); ?>" 
                              class="card-img-top artwork-image" 
                              alt="<?php echo htmlspecialchars($artwork['title']); ?>">
                         <span class="badge bg-primary category-badge">
@@ -115,36 +124,100 @@ $featured_artworks = fetchAll(
                             <h5 class="card-title"><?php echo htmlspecialchars($artwork['title']); ?></h5>
                             <p class="card-text">
                                 <small class="text-muted">
-                                    By <?php echo htmlspecialchars($artwork['full_name']); ?>
+                                    By <a href="artist.php?id=<?php echo $artwork['artist_id']; ?>" 
+                                        class="text-decoration-none">
+                                        <?php echo htmlspecialchars($artwork['full_name']); ?>
+                                    </a>
                                 </small>
                             </p>
+                            <div class="rating-stars mb-2">
+                                <?php
+                                $rating = round($artwork['avg_rating'] ?? 0);
+                                for ($i = 1; $i <= 5; $i++) {
+                                    echo $i <= $rating ? '★' : '☆';
+                                }
+                                ?>
+                            </div>
                             <a href="artwork.php?id=<?php echo $artwork['artwork_id']; ?>" 
-                               class="btn btn-outline-primary">View Details</a>
+                               class="btn btn-outline-primary w-100">View Details</a>
                         </div>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
+        <div class="text-center mt-4">
+            <a href="gallery.php" class="btn btn-primary">View All Artworks</a>
+        </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-4">
+    <!-- Features Section -->
+    <section class="cta-section">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5><?php echo SITE_NAME; ?></h5>
-                    <p>Connecting artists and art lovers worldwide</p>
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>Share Your Art</h3>
+                    <p>Create your artist profile and showcase your artwork to a global audience</p>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <h5>Follow Us</h5>
-                    <a href="#" class="text-light me-3"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Rate & Comment</h3>
+                    <p>Engage with the community by rating artworks and sharing your thoughts</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Connect with Artists</h3>
+                    <p>Follow your favorite artists and stay updated with their latest works</p>
                 </div>
             </div>
         </div>
-    </footer>
+    </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Featured Artists -->
+    <section class="container mb-5">
+        <h2 class="text-center mb-4">Featured Artists</h2>
+        <div class="row">
+            <?php foreach ($featured_artists as $artist): ?>
+                <div class="col-md-3">
+                    <div class="card feature-card text-center">
+                        <div class="card-body">
+                            <img src="<?php echo $artist['profile_image'] ?? 'images/default-avatar.png'; ?>" 
+                                 class="artist-image" 
+                                 alt="<?php echo htmlspecialchars($artist['full_name']); ?>">
+                            <h5 class="card-title mb-2">
+                                <?php echo htmlspecialchars($artist['full_name']); ?>
+                            </h5>
+                            <div class="rating-stars mb-2">
+                                <?php
+                                $rating = round($artist['avg_rating'] ?? 0);
+                                for ($i = 1; $i <= 5; $i++) {
+                                    echo $i <= $rating ? '★' : '☆';
+                                }
+                                ?>
+                            </div>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <?php echo $artist['artwork_count']; ?> artworks
+                                </small>
+                            </p>
+                            <a href="artist.php?id=<?php echo $artist['user_id']; ?>" 
+                               class="btn btn-outline-primary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="text-center mt-4">
+            <a href="artists.php" class="btn btn-primary">View All Artists</a>
+        </div>
+    </section>
+
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html> 

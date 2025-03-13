@@ -1,63 +1,109 @@
 <?php
 require_once __DIR__ . '/../config.php';
 
-function getDBConnection() {
+// Database connection
+function getConnection() {
     static $conn = null;
     
     if ($conn === null) {
-        $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        
-        if (!$conn) {
-            die("Connection failed: " . mysqli_connect_error());
+        try {
+            $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+            
+            if ($conn->connect_error) {
+                throw new Exception("Connection failed: " . $conn->connect_error);
+            }
+            
+            $conn->set_charset("utf8mb4");
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            die("Database connection failed. Please try again later.");
         }
-        
-        mysqli_set_charset($conn, "utf8mb4");
     }
     
     return $conn;
 }
 
-// Helper function to execute queries safely
+// Execute a query with parameters
 function executeQuery($sql, $params = [], $types = '') {
-    $conn = getDBConnection();
-    $stmt = mysqli_prepare($conn, $sql);
+    $conn = getConnection();
     
-    if ($stmt === false) {
-        die("Error preparing statement: " . mysqli_error($conn));
+    try {
+        $stmt = $conn->prepare($sql);
+        
+        if ($stmt === false) {
+            throw new Exception("Error preparing statement: " . $conn->error);
+        }
+        
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+        
+        $result = $stmt->execute();
+        
+        if ($result === false) {
+            throw new Exception("Error executing statement: " . $stmt->error);
+        }
+        
+        return $stmt;
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        throw $e;
     }
-    
-    if (!empty($params)) {
-        mysqli_stmt_bind_param($stmt, $types, ...$params);
-    }
-    
-    if (!mysqli_stmt_execute($stmt)) {
-        die("Error executing statement: " . mysqli_stmt_error($stmt));
-    }
-    
-    $result = mysqli_stmt_get_result($stmt);
-    mysqli_stmt_close($stmt);
-    
-    return $result;
 }
 
-// Helper function to get a single row
+// Fetch a single row
 function fetchOne($sql, $params = [], $types = '') {
-    $result = executeQuery($sql, $params, $types);
-    return mysqli_fetch_assoc($result);
+    try {
+        $stmt = executeQuery($sql, $params, $types);
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        return null;
+    }
 }
 
-// Helper function to get multiple rows
+// Fetch multiple rows
 function fetchAll($sql, $params = [], $types = '') {
-    $result = executeQuery($sql, $params, $types);
-    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    try {
+        $stmt = executeQuery($sql, $params, $types);
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        return [];
+    }
 }
 
-// Helper function to get last inserted ID
+// Get last inserted ID
 function getLastInsertId() {
-    return mysqli_insert_id(getDBConnection());
+    return getConnection()->insert_id;
 }
 
-// Helper function to escape strings
-function escapeString($string) {
-    return mysqli_real_escape_string(getDBConnection(), $string);
+// Begin transaction
+function beginTransaction() {
+    getConnection()->begin_transaction();
+}
+
+// Commit transaction
+function commitTransaction() {
+    getConnection()->commit();
+}
+
+// Rollback transaction
+function rollbackTransaction() {
+    getConnection()->rollback();
+}
+
+// Escape string
+function escapeString($str) {
+    return getConnection()->real_escape_string($str);
+}
+
+// Close connection
+function closeConnection() {
+    $conn = getConnection();
+    if ($conn) {
+        $conn->close();
+    }
 } 
