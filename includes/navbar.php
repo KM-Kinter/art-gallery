@@ -1,6 +1,6 @@
 <?php
 // Get current page name
-$current_page = basename($_SERVER['PHP_SELF']);
+$current_page = basename($_SERVER['PHP_SELF'], '.php');
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -16,21 +16,21 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link <?= $current_page === 'gallery.php' ? 'active' : '' ?>" 
-                       href="<?= SITE_URL ?>/gallery.php">
+                    <a class="nav-link <?= $current_page === 'gallery' ? 'active' : '' ?>" 
+                       href="<?= SITE_URL ?>/gallery">
                         <i class="fas fa-images me-1"></i>Gallery
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $current_page === 'artists.php' ? 'active' : '' ?>" 
-                       href="<?= SITE_URL ?>/artists.php">
+                    <a class="nav-link <?= $current_page === 'artists' ? 'active' : '' ?>" 
+                       href="<?= SITE_URL ?>/artists">
                         <i class="fas fa-users me-1"></i>Artists
                     </a>
                 </li>
                 <?php if (isArtist()): ?>
                     <li class="nav-item">
-                        <a class="nav-link <?= $current_page === 'upload.php' ? 'active' : '' ?>" 
-                           href="<?= SITE_URL ?>/upload.php">
+                        <a class="nav-link <?= $current_page === 'upload' ? 'active' : '' ?>" 
+                           href="<?= SITE_URL ?>/upload">
                             <i class="fas fa-upload me-1"></i>Upload
                         </a>
                     </li>
@@ -47,30 +47,30 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <ul class="dropdown-menu dropdown-menu-end">
                             <?php if (isAdmin()): ?>
                                 <li>
-                                    <a class="dropdown-item" href="<?= SITE_URL ?>/admin/dashboard.php">
+                                    <a class="dropdown-item" href="<?= SITE_URL ?>/admin/dashboard">
                                         <i class="fas fa-tachometer-alt me-1"></i>Admin Dashboard
                                     </a>
                                 </li>
                             <?php elseif (isArtist()): ?>
                                 <li>
-                                    <a class="dropdown-item" href="<?= SITE_URL ?>/artist/dashboard.php">
+                                    <a class="dropdown-item" href="<?= SITE_URL ?>/artist/dashboard">
                                         <i class="fas fa-tachometer-alt me-1"></i>Artist Dashboard
                                     </a>
                                 </li>
                             <?php endif; ?>
                             <li>
-                                <a class="dropdown-item" href="<?= SITE_URL ?>/edit-profile.php">
+                                <a class="dropdown-item" href="<?= SITE_URL ?>/edit-profile">
                                     <i class="fas fa-user-edit me-1"></i>Edit Profile
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="<?= SITE_URL ?>/settings.php">
+                                <a class="dropdown-item" href="<?= SITE_URL ?>/settings">
                                     <i class="fas fa-cog me-1"></i>Settings
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item text-danger" href="<?= SITE_URL ?>/logout.php">
+                                <a class="dropdown-item text-danger" href="<?= SITE_URL ?>/logout">
                                     <i class="fas fa-sign-out-alt me-1"></i>Logout
                                 </a>
                             </li>
@@ -78,14 +78,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </li>
                 <?php else: ?>
                     <li class="nav-item">
-                        <a class="nav-link <?= $current_page === 'login.php' ? 'active' : '' ?>" 
-                           href="<?= SITE_URL ?>/login.php">
+                        <a class="nav-link <?= $current_page === 'login' ? 'active' : '' ?>" 
+                           href="<?= SITE_URL ?>/login">
                             <i class="fas fa-sign-in-alt me-1"></i>Login
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $current_page === 'register.php' ? 'active' : '' ?>" 
-                           href="<?= SITE_URL ?>/register.php">
+                        <a class="nav-link <?= $current_page === 'register' ? 'active' : '' ?>" 
+                           href="<?= SITE_URL ?>/register">
                             <i class="fas fa-user-plus me-1"></i>Register
                         </a>
                     </li>
