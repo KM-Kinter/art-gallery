@@ -1,10 +1,11 @@
 <?php
 require_once '../config.php';
 require_once '../includes/db.php';
+require_once '../includes/auth.php';
 
 // Check if user is logged in and is an admin
 if (!isLoggedIn() || !isAdmin()) {
-    header('Location: ../login.php');
+    header('Location: ' . SITE_URL . '/login');
     exit;
 }
 
@@ -69,7 +70,7 @@ include '../includes/header.php';
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">Manage Users</h1>
         <div>
-            <a href="dashboard.php" class="admin-btn admin-btn-outline">
+            <a href="dashboard" class="admin-btn admin-btn-outline">
                 <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
             </a>
         </div>
@@ -139,7 +140,7 @@ include '../includes/header.php';
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li>
-                                                <a class="dropdown-item" href="../profile.php?id=<?= $user['user_id'] ?>">
+                                                <a class="dropdown-item" href="../profile?id=<?= $user['user_id'] ?>">
                                                     <i class="fas fa-user me-2"></i>View Profile
                                                 </a>
                                             </li>

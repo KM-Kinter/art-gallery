@@ -10,11 +10,11 @@
                 <div class="col-md-4">
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="<?= SITE_URL ?>/gallery.php" class="text-white">Gallery</a></li>
-                        <li><a href="<?= SITE_URL ?>/artists.php" class="text-white">Artists</a></li>
+                        <li><a href="<?= SITE_URL ?>/gallery" class="text-white">Gallery</a></li>
+                        <li><a href="<?= SITE_URL ?>/artists" class="text-white">Artists</a></li>
                         <?php if (!isLoggedIn()): ?>
-                            <li><a href="<?= SITE_URL ?>/register.php" class="text-white">Register</a></li>
-                            <li><a href="<?= SITE_URL ?>/login.php" class="text-white">Login</a></li>
+                            <li><a href="<?= SITE_URL ?>/register" class="text-white">Register</a></li>
+                            <li><a href="<?= SITE_URL ?>/login" class="text-white">Login</a></li>
                         <?php endif; ?>
                     </ul>
                 </div>

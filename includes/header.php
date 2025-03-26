@@ -17,10 +17,12 @@
     <link rel="icon" type="image/png" href="<?= SITE_URL ?>/images/favicon.png">
 </head>
 <body>
-    <?php include 'navbar.php'; ?>
+    <?php include 'navbar'; ?>
     
     <main class="main-content">
-        <!-- Content will be injected here -->
+        <div class="container py-4">
+            <!-- Content will be injected here -->
+        </div>
     </main>
 </body>
 </html> 

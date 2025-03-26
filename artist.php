@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isLoggedIn()) {
     }
 }
 
-// Include header
+// Page title and header
 $pageTitle = htmlspecialchars($artist['full_name']) . " - Artist Profile";
 include 'includes/header.php';
 ?>
@@ -199,5 +199,45 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const followBtn = document.getElementById('followBtn');
+    if (followBtn) {
+        followBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const artistId = this.dataset.artistId;
+            const isFollowing = this.classList.contains('following');
+            const action = isFollowing ? 'unfollow' : 'follow';
+            
+            fetch('ajax/follow.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `artist_id=${artistId}&action=${action}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (action === 'follow') {
+                        this.classList.add('following');
+                        this.textContent = 'Following';
+                    } else {
+                        this.classList.remove('following');
+                        this.textContent = 'Follow';
+                    }
+                } else {
+                    alert(data.error || 'An error occurred');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request');
+            });
+        });
+    }
+});
+</script>
 
 <?php include 'includes/footer.php'; ?> 

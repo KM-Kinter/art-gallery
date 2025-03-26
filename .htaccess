@@ -1,0 +1,30 @@
+RewriteEngine On
+RewriteBase /projekt/
+
+# Remove .php extension
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Handle artist profiles
+RewriteRule ^artist/([0-9]+)/?$ artist.php?id=$1 [L,QSA]
+
+# Handle artwork pages
+RewriteRule ^artwork/([0-9]+)/?$ artwork.php?id=$1 [L,QSA]
+
+# Handle user profiles
+RewriteRule ^profile/([0-9]+)/?$ profile.php?id=$1 [L,QSA]
+
+# Handle category pages
+RewriteRule ^category/([0-9]+)/?$ category.php?id=$1 [L,QSA]
+
+# Handle admin pages
+RewriteRule ^admin/?$ admin/dashboard.php [L]
+RewriteRule ^admin/users/?$ admin/users.php [L]
+RewriteRule ^admin/artworks/?$ admin/artworks.php [L]
+RewriteRule ^admin/categories/?$ admin/categories.php [L]
+
+# Handle artist pages
+RewriteRule ^artist/dashboard/?$ artist/dashboard.php [L]
+RewriteRule ^artist/upload/?$ artist/upload.php [L]
+RewriteRule ^artist/edit/([0-9]+)/?$ artist/edit.php?id=$1 [L,QSA]
