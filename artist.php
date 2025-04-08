@@ -2,10 +2,8 @@
 require_once 'config.php';
 require_once 'includes/db.php';
 
-// Get artist ID from URL
 $artist_id = (int)($_GET['id'] ?? 0);
 
-// Get artist data
 $artist = fetchOne(
     "SELECT u.*, up.bio, up.avatar,
             (SELECT COUNT(*) FROM artworks WHERE artist_id = u.user_id AND status = 'approved') as artwork_count,
@@ -18,13 +16,11 @@ $artist = fetchOne(
     'i'
 );
 
-// If artist not found or not an artist, redirect to gallery
 if (!$artist) {
     header('Location: gallery.php');
     exit;
 }
 
-// Get artist's approved artworks
 $artworks = fetchAll(
     "SELECT a.*, 
             (SELECT COUNT(*) FROM artwork_likes WHERE artwork_id = a.artwork_id) as like_count,
@@ -39,7 +35,6 @@ $artworks = fetchAll(
     'i'
 );
 
-// Check if current user follows this artist
 $is_following = false;
 if (isLoggedIn()) {
     $follow_check = fetchOne(
@@ -50,7 +45,6 @@ if (isLoggedIn()) {
     $is_following = (bool)$follow_check;
 }
 
-// Handle follow/unfollow
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isLoggedIn()) {
     $action = $_POST['action'] ?? '';
     
@@ -81,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isLoggedIn()) {
     }
 }
 
-// Include header
 $pageTitle = htmlspecialchars($artist['full_name']) . " - Artist Profile";
 include 'includes/header.php';
 ?>
@@ -92,7 +85,6 @@ include 'includes/header.php';
     <?php endif; ?>
     
     <div class="row">
-        <!-- Artist Info -->
         <div class="col-md-4">
             <div class="card shadow">
                 <div class="card-body text-center">
@@ -145,7 +137,6 @@ include 'includes/header.php';
             </div>
         </div>
         
-        <!-- Artist's Artworks -->
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header">

@@ -2,7 +2,6 @@
 require_once 'config.php';
 require_once 'includes/db.php';
 
-// Check if user is logged in
 if (!isLoggedIn()) {
     header('Location: login.php');
     exit;
@@ -16,13 +15,11 @@ $user = fetchOne(
     'i'
 );
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $full_name = trim($_POST['full_name'] ?? '');
         $bio = trim($_POST['bio'] ?? '');
         
-        // Handle profile image upload
         if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
             $file = $_FILES['profile_image'];
             $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
@@ -39,13 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $filename = uniqid('profile_') . '_' . basename($file['name']);
             $upload_path = 'uploads/profiles/' . $filename;
             
-            // Create directory if it doesn't exist
             if (!file_exists('uploads/profiles')) {
                 mkdir('uploads/profiles', 0755, true);
             }
             
             if (move_uploaded_file($file['tmp_name'], $upload_path)) {
-                // Delete old profile image if exists
                 if (!empty($user['profile_image']) && file_exists($user['profile_image'])) {
                     unlink($user['profile_image']);
                 }
@@ -59,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        // Update other profile information
         executeQuery(
             "UPDATE users SET full_name = ?, bio = ? WHERE user_id = ?",
             [$full_name, $bio, getCurrentUserId()],
@@ -76,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Include header
 $pageTitle = "Edit Profile";
 include 'includes/header.php';
 ?>

@@ -2,20 +2,17 @@
 require_once 'config.php';
 require_once 'includes/db.php';
 
-// Get search parameters
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $per_page = 12;
 $offset = ($page - 1) * $per_page;
 
-// Build query
 $where_clause = "WHERE u.role = 'artist'";
 if (!empty($search)) {
     $search = '%' . $search . '%';
     $where_clause .= " AND (u.username LIKE ? OR u.full_name LIKE ?)";
 }
 
-// Get total artists count
 $total_count = fetchOne(
     "SELECT COUNT(*) as count FROM users u $where_clause",
     !empty($search) ? [$search, $search] : [],
@@ -24,7 +21,6 @@ $total_count = fetchOne(
 
 $total_pages = ceil($total_count / $per_page);
 
-// Get artists with their stats
 $artists = fetchAll(
     "SELECT u.*, 
             (SELECT COUNT(*) FROM artworks WHERE artist_id = u.user_id) as artwork_count,
@@ -39,13 +35,11 @@ $artists = fetchAll(
     !empty($search) ? 'ssii' : 'ii'
 );
 
-// Page title and header
 $pageTitle = "Artists - " . SITE_NAME;
 include 'includes/header.php';
 ?>
 
 <div class="container-fluid py-5">
-    <!-- Search Section -->
     <div class="container mb-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -63,7 +57,6 @@ include 'includes/header.php';
         </div>
     </div>
 
-    <!-- Artists Grid -->
     <div class="container">
         <?php if (empty($artists)): ?>
             <div class="text-center">
@@ -124,7 +117,6 @@ include 'includes/header.php';
                 <?php endforeach; ?>
             </div>
 
-            <!-- Pagination -->
             <?php if ($total_pages > 1): ?>
                 <nav aria-label="Artists navigation" class="mt-4">
                     <ul class="pagination justify-content-center">

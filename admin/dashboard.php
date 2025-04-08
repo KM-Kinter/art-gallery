@@ -2,13 +2,11 @@
 require_once '../config.php';
 require_once '../includes/db.php';
 
-// Check if user is logged in and is an admin
 if (!isLoggedIn() || !isAdmin()) {
     header('Location: ../login.php');
     exit;
 }
 
-// Get statistics
 $stats = [
     'total_users' => fetchOne("SELECT COUNT(*) as count FROM users")['count'],
     'total_artists' => fetchOne("SELECT COUNT(*) as count FROM users WHERE role = 'artist'")['count'],
@@ -16,7 +14,6 @@ $stats = [
     'pending_artworks' => fetchOne("SELECT COUNT(*) as count FROM artworks WHERE status = 'pending'")['count']
 ];
 
-// Get recent artworks pending approval
 $pending_artworks = fetchAll(
     "SELECT a.*, u.username, u.full_name, c.name as category_name
      FROM artworks a 
@@ -26,14 +23,12 @@ $pending_artworks = fetchAll(
      ORDER BY a.upload_date DESC"
 );
 
-// Get recent users
 $recent_users = fetchAll(
     "SELECT * FROM users 
      ORDER BY created_at DESC 
      LIMIT 5"
 );
 
-// Get recent comments
 $recent_comments = fetchAll(
     "SELECT c.*, u.username, u.full_name, a.title as artwork_title 
      FROM comments c 
@@ -43,7 +38,6 @@ $recent_comments = fetchAll(
      LIMIT 5"
 );
 
-// Handle artwork approval/rejection
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $artwork_id = $_POST['artwork_id'] ?? 0;
     $action = $_POST['action'] ?? '';
@@ -58,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             $success = "Artwork has been " . $status;
             
-            // Refresh pending artworks list
             $pending_artworks = fetchAll(
                 "SELECT a.*, u.username, u.full_name, c.name as category_name
                  FROM artworks a 
@@ -100,7 +93,6 @@ include '../includes/header.php';
         <div class="alert alert-success"><?= $success ?></div>
     <?php endif; ?>
 
-    <!-- Statistics -->
     <div class="row g-4 mb-4">
         <div class="col-md-3">
             <div class="stats-card">
@@ -129,7 +121,6 @@ include '../includes/header.php';
     </div>
 
     <div class="row">
-        <!-- Pending Artworks -->
         <div class="col-md-6 mb-4">
             <div class="admin-card">
                 <div class="admin-card-header">
@@ -195,7 +186,6 @@ include '../includes/header.php';
             </div>
         </div>
 
-        <!-- Recent Users -->
         <div class="col-md-6 mb-4">
             <div class="admin-card">
                 <div class="admin-card-header">
@@ -251,7 +241,6 @@ include '../includes/header.php';
             </div>
         </div>
 
-        <!-- Recent Comments -->
         <div class="col-12">
             <div class="admin-card">
                 <div class="admin-card-header">

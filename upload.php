@@ -2,7 +2,6 @@
 require_once 'config.php';
 require_once 'includes/db.php';
 
-// Check if user is logged in and is an artist
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'artist') {
     header('Location: login.php');
     exit;
@@ -11,7 +10,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'artist') {
 $error = '';
 $success = '';
 
-// Get categories for the form
 $categories = fetchAll("SELECT * FROM categories ORDER BY name");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -20,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'] ?? '';
     $creation_date = $_POST['creation_date'] ?? '';
 
-    // Validation
     if (empty($title) || empty($category_id) || empty($description) || empty($creation_date)) {
         $error = 'Please fill in all required fields';
     } elseif (!isset($_FILES['artwork_image']) || $_FILES['artwork_image']['error'] !== UPLOAD_ERR_OK) {
@@ -28,28 +25,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $file = $_FILES['artwork_image'];
         
-        // Validate file type
         $file_type = mime_content_type($file['tmp_name']);
         if (!in_array($file_type, ALLOWED_IMAGE_TYPES)) {
             $error = 'Invalid file type. Please upload a JPEG, PNG, or GIF image';
         }
-        // Validate file size
         elseif ($file['size'] > MAX_FILE_SIZE) {
             $error = 'File is too large. Maximum size is ' . (MAX_FILE_SIZE / 1024 / 1024) . 'MB';
         } else {
-            // Create upload directory if it doesn't exist
             if (!file_exists(UPLOAD_PATH)) {
                 mkdir(UPLOAD_PATH, 0777, true);
             }
 
-            // Generate unique filename
             $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
             $filename = uniqid() . '.' . $extension;
             $filepath = UPLOAD_PATH . $filename;
 
-            // Move uploaded file
             if (move_uploaded_file($file['tmp_name'], $filepath)) {
-                // Insert artwork into database
+                
                 $sql = "INSERT INTO artworks (title, artist_id, category_id, description, image_path, creation_date) 
                         VALUES (?, ?, ?, ?, ?, ?)";
                 $result = executeQuery(
@@ -62,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $success = 'Artwork uploaded successfully! It will be reviewed by our staff.';
                 } else {
                     $error = 'Failed to save artwork details';
-                    // Clean up uploaded file
+                    
                     unlink($filepath);
                 }
             } else {
@@ -106,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <!-- Navigation -->
+    
     <?php include 'includes/navbar.php'; ?>
 
     <div class="container upload-container">
@@ -192,12 +184,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
     </div>
 
-    <!-- Footer -->
+    
     <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Form validation
+        
         (function () {
             'use strict'
             var forms = document.querySelectorAll('.needs-validation')
@@ -212,7 +204,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             })
         })()
 
-        // Image preview
         const imageInput = document.getElementById('artwork_image');
         const imagePreview = document.getElementById('image-preview');
         const dropZone = document.getElementById('drop-zone');
@@ -230,7 +221,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         });
 
-        // Drag and drop
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropZone.addEventListener(eventName, preventDefaults, false);
         });

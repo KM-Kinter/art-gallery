@@ -1,7 +1,6 @@
 <?php
 require_once 'config.php';
 
-// Initialize variables
 $error = '';
 $success = '';
 
@@ -9,12 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
     
-    // Validate input
     if (empty($username) || empty($password)) {
         $error = "Please enter both username and password.";
     } else {
         try {
-            // Get user from database
             $sql = "SELECT user_id, username, password, role, status, full_name FROM users WHERE username = ?";
             $user = fetchOne($sql, [$username], 's');
             
@@ -25,13 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif (!password_verify($password, $user['password'])) {
                 $error = "Invalid username or password.";
             } else {
-                // Set session variables
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['full_name'] = $user['full_name'];
                 
-                // Update last login time
                 executeQuery(
                     "UPDATE users SET updated_at = NOW() WHERE user_id = ?",
                     [$user['user_id']],
@@ -40,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $success = "Login successful! Redirecting...";
                 
-                // Redirect based on role
                 if ($user['role'] === 'admin') {
                     header("Location: admin/dashboard.php");
                     exit;
@@ -59,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Include header
 $pageTitle = "Login";
 include 'includes/header.php';
 ?>

@@ -2,10 +2,8 @@
 require_once 'config.php';
 require_once 'includes/db.php';
 
-// Get artwork ID from URL
 $artwork_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Get artwork details
 $artwork = fetchOne(
     "SELECT a.*, u.username, u.full_name, u.profile_image as artist_image, c.name as category_name,
             (SELECT AVG(rating) FROM ratings r WHERE r.artwork_id = a.artwork_id) as avg_rating,
@@ -23,7 +21,6 @@ if (!$artwork) {
     exit;
 }
 
-// Handle rating submission
 if (isset($_POST['rating']) && isset($_SESSION['user_id'])) {
     $rating = (int)$_POST['rating'];
     if ($rating >= 1 && $rating <= 5) {
@@ -39,7 +36,6 @@ if (isset($_POST['rating']) && isset($_SESSION['user_id'])) {
     }
 }
 
-// Handle comment submission
 if (isset($_POST['comment']) && isset($_SESSION['user_id'])) {
     $comment = trim($_POST['comment']);
     if (!empty($comment)) {
@@ -53,7 +49,6 @@ if (isset($_POST['comment']) && isset($_SESSION['user_id'])) {
     }
 }
 
-// Get user's rating if logged in
 $user_rating = null;
 if (isset($_SESSION['user_id'])) {
     $rating_result = fetchOne(
@@ -66,7 +61,6 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
-// Get comments with user info
 $comments = fetchAll(
     "SELECT c.*, u.username, u.full_name, u.profile_image
      FROM comments c
@@ -113,23 +107,19 @@ $comments = fetchAll(
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <?php include 'includes/navbar.php'; ?>
 
     <div class="container my-5">
         <div class="row">
-            <!-- Artwork Image -->
             <div class="col-md-8">
                 <img src="<?php echo htmlspecialchars($artwork['file_path']); ?>" 
                      class="img-fluid artwork-image" 
                      alt="<?php echo htmlspecialchars($artwork['title']); ?>">
             </div>
 
-            <!-- Artwork Details -->
             <div class="col-md-4">
                 <h1 class="mb-3"><?php echo htmlspecialchars($artwork['title']); ?></h1>
                 
-                <!-- Artist Info -->
                 <div class="d-flex align-items-center mb-4">
                     <img src="<?php echo $artwork['artist_image'] ?? 'images/default-avatar.png'; ?>" 
                          class="artist-image me-3" 
@@ -145,7 +135,6 @@ $comments = fetchAll(
                     </div>
                 </div>
 
-                <!-- Rating -->
                 <div class="mb-4">
                     <h5>Rating</h5>
                     <div class="rating-stars <?php echo isset($_SESSION['user_id']) ? '' : 'readonly'; ?>" id="rating-stars">
@@ -161,13 +150,11 @@ $comments = fetchAll(
                     </small>
                 </div>
 
-                <!-- Creation Date -->
                 <div class="mb-4">
                     <h5>Created On</h5>
                     <p><?php echo date('F j, Y', strtotime($artwork['creation_date'])); ?></p>
                 </div>
 
-                <!-- Description -->
                 <div class="mb-4">
                     <h5>Description</h5>
                     <p><?php echo nl2br(htmlspecialchars($artwork['description'])); ?></p>
@@ -175,13 +162,11 @@ $comments = fetchAll(
             </div>
         </div>
 
-        <!-- Comments Section -->
         <div class="row mt-5">
             <div class="col-md-8">
                 <h3 class="mb-4">Comments</h3>
 
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <!-- Comment Form -->
                     <form method="POST" class="mb-4">
                         <div class="mb-3">
                             <textarea class="form-control" 
@@ -198,7 +183,6 @@ $comments = fetchAll(
                     </div>
                 <?php endif; ?>
 
-                <!-- Comments List -->
                 <?php foreach ($comments as $comment): ?>
                     <div class="card mb-3">
                         <div class="card-body">
@@ -221,19 +205,16 @@ $comments = fetchAll(
         </div>
     </div>
 
-    <!-- Rating Form (Hidden) -->
     <?php if (isset($_SESSION['user_id'])): ?>
         <form id="rating-form" method="POST" class="d-none">
             <input type="hidden" name="rating" id="rating-input">
         </form>
     <?php endif; ?>
 
-    <!-- Footer -->
     <?php include 'includes/footer.php'; ?>
 
     <?php if (isset($_SESSION['user_id'])): ?>
         <script>
-            // Rating functionality
             const ratingStars = document.querySelectorAll('.rating-stars .star');
             const ratingForm = document.getElementById('rating-form');
             const ratingInput = document.getElementById('rating-input');

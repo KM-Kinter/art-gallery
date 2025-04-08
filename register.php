@@ -2,7 +2,6 @@
 require_once 'config.php';
 require_once 'includes/db.php';
 
-// Initialize variables
 $error = '';
 $success = '';
 
@@ -14,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = trim($_POST['full_name'] ?? '');
     $role = $_POST['role'] ?? 'user';
     
-    // Validate input
     if (empty($username) || empty($password) || empty($confirm_password) || empty($email) || empty($full_name)) {
         $error = "All fields are required.";
     } elseif ($password !== $confirm_password) {
@@ -27,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Invalid role selected.";
     } else {
         try {
-            // Check if username already exists
             $existing = fetchOne(
                 "SELECT user_id FROM users WHERE username = ? OR email = ?",
                 [$username, $email],
@@ -37,10 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($existing) {
                 $error = "Username or email already exists.";
             } else {
-                // Hash password
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 
-                // Insert user
                 executeQuery(
                     "INSERT INTO users (username, email, password, full_name, role, bio, status, created_at) 
                      VALUES (?, ?, ?, ?, ?, '', 'active', NOW())",
@@ -50,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $success = "Registration successful! Redirecting to login...";
                 
-                // Redirect to login page immediately
                 header("Location: login.php");
                 exit;
             }
@@ -61,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Include header
 $pageTitle = "Register";
 include 'includes/header.php';
 ?>

@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../config.php';
 
-// Database connection
 function getConnection() {
     static $conn = null;
     
@@ -23,7 +22,6 @@ function getConnection() {
     return $conn;
 }
 
-// Execute a query with parameters
 function executeQuery($sql, $params = [], $types = '') {
     $conn = getConnection();
     
@@ -51,7 +49,6 @@ function executeQuery($sql, $params = [], $types = '') {
     }
 }
 
-// Fetch a single row
 function fetchOne($sql, $params = [], $types = '') {
     try {
         $stmt = executeQuery($sql, $params, $types);
@@ -63,7 +60,6 @@ function fetchOne($sql, $params = [], $types = '') {
     }
 }
 
-// Fetch multiple rows
 function fetchAll($sql, $params = [], $types = '') {
     try {
         $stmt = executeQuery($sql, $params, $types);
@@ -75,32 +71,26 @@ function fetchAll($sql, $params = [], $types = '') {
     }
 }
 
-// Get last inserted ID
 function getLastInsertId() {
     return getConnection()->insert_id;
 }
 
-// Begin transaction
 function beginTransaction() {
     getConnection()->begin_transaction();
 }
 
-// Commit transaction
 function commitTransaction() {
     getConnection()->commit();
 }
 
-// Rollback transaction
 function rollbackTransaction() {
     getConnection()->rollback();
 }
 
-// Escape string
 function escapeString($str) {
     return getConnection()->real_escape_string($str);
 }
 
-// Close connection
 function closeConnection() {
     $conn = getConnection();
     if ($conn) {

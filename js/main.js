@@ -1,18 +1,15 @@
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
     
-    // Initialize popovers
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
     var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl);
     });
     
-    // Handle file input change
     const fileInputs = document.querySelectorAll('.custom-file-input');
     fileInputs.forEach(input => {
         input.addEventListener('change', function(e) {
@@ -24,14 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Handle rating stars
     const ratingContainers = document.querySelectorAll('.rating-stars');
     ratingContainers.forEach(container => {
         const stars = container.querySelectorAll('.star');
         const ratingInput = container.querySelector('input[type="hidden"]');
         
         stars.forEach((star, index) => {
-            // Hover effect
             star.addEventListener('mouseover', () => {
                 for (let i = 0; i <= index; i++) {
                     stars[i].classList.add('hover');
@@ -42,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 stars.forEach(s => s.classList.remove('hover'));
             });
             
-            // Click event
             star.addEventListener('click', () => {
                 const rating = index + 1;
                 if (ratingInput) {
@@ -53,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     s.classList.toggle('active', i < rating);
                 });
                 
-                // If the star is part of a form, submit it
                 const form = container.closest('form');
                 if (form && form.classList.contains('auto-submit')) {
                     form.submit();
@@ -62,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Handle follow/unfollow buttons
     const followButtons = document.querySelectorAll('.follow-btn');
     followButtons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -95,7 +87,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Handle like/unlike buttons
     const likeButtons = document.querySelectorAll('.like-btn');
     likeButtons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -131,7 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Handle comment form submission
     const commentForms = document.querySelectorAll('.comment-form');
     commentForms.forEach(form => {
         form.addEventListener('submit', function(e) {
@@ -155,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Add new comment to the list
                     const commentsList = document.querySelector(`#comments-${artworkId}`);
                     if (commentsList) {
                         const newComment = document.createElement('div');
@@ -173,10 +162,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         commentsList.insertBefore(newComment, commentsList.firstChild);
                     }
                     
-                    // Clear the textarea
                     textarea.value = '';
                     
-                    // Update comment count
                     const counter = document.querySelector(`#comment-count-${artworkId}`);
                     if (counter) {
                         counter.textContent = parseInt(counter.textContent) + 1;

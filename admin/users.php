@@ -2,13 +2,11 @@
 require_once '../config.php';
 require_once '../includes/db.php';
 
-// Check if user is logged in and is an admin
 if (!isLoggedIn() || !isAdmin()) {
     header('Location: ../login.php');
     exit;
 }
 
-// Handle user status changes
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_POST['user_id'] ?? 0;
     $action = $_POST['action'] ?? '';
@@ -33,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get users with pagination
 $page = max(1, $_GET['page'] ?? 1);
 $limit = 20;
 $offset = ($page - 1) * $limit;
@@ -58,7 +55,6 @@ $users = fetchAll(
     'iii'
 );
 
-// Include header
 $pageTitle = "Manage Users";
 include '../includes/header.php';
 ?>

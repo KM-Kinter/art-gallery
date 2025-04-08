@@ -2,13 +2,11 @@
 require_once '../config.php';
 require_once '../includes/db.php';
 
-// Check if user is logged in and is an artist
 if (!isLoggedIn() || !isArtist()) {
     header('Location: ../login.php');
     exit;
 }
 
-// Get artist's statistics
 $user_id = getCurrentUserId();
 $stats = fetchOne(
     "SELECT 
@@ -23,7 +21,6 @@ $stats = fetchOne(
     'iiii'
 );
 
-// Get recent artworks
 $recent_artworks = fetchAll(
     "SELECT a.*, c.name as category_name,
             (SELECT AVG(rating) FROM ratings r WHERE r.artwork_id = a.artwork_id) as avg_rating,
@@ -37,7 +34,6 @@ $recent_artworks = fetchAll(
     'i'
 );
 
-// Get recent comments
 $recent_comments = fetchAll(
     "SELECT c.*, a.title as artwork_title, u.username, u.profile_image
      FROM comments c
@@ -76,7 +72,6 @@ $recent_comments = fetchAll(
             </div>
         </div>
 
-        <!-- Statistics -->
         <div class="row mb-4">
             <div class="col-md-3 mb-3">
                 <div class="custom-card h-100">
@@ -117,7 +112,6 @@ $recent_comments = fetchAll(
         </div>
 
         <div class="row">
-            <!-- Recent Artworks -->
             <div class="col-md-8 mb-4">
                 <div class="custom-card">
                     <div class="card-body">
@@ -176,7 +170,6 @@ $recent_comments = fetchAll(
                 </div>
             </div>
 
-            <!-- Recent Comments -->
             <div class="col-md-4 mb-4">
                 <div class="custom-card">
                     <div class="card-body">

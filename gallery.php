@@ -2,14 +2,12 @@
 require_once 'config.php';
 require_once 'includes/db.php';
 
-// Get filter parameters
 $category_id = isset($_GET['category']) ? (int)$_GET['category'] : 0;
 $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $per_page = 12;
 $offset = ($page - 1) * $per_page;
 
-// Build query
 $where_clause = "WHERE a.status = 'approved'";
 if ($category_id > 0) {
     $where_clause .= " AND a.category_id = " . $category_id;
@@ -22,14 +20,12 @@ $order_clause = match($sort) {
     default => 'a.upload_date DESC'
 };
 
-// Get total artworks count
 $total_count = fetchOne(
     "SELECT COUNT(*) as count FROM artworks a $where_clause"
 )['count'];
 
 $total_pages = ceil($total_count / $per_page);
 
-// Get artworks
 $artworks = fetchAll(
     "SELECT a.*, u.username, u.full_name, c.name as category_name,
             (SELECT AVG(rating) FROM ratings r WHERE r.artwork_id = a.artwork_id) as avg_rating,
@@ -44,7 +40,6 @@ $artworks = fetchAll(
     'ii'
 );
 
-// Get all categories for filter
 $categories = fetchAll("SELECT * FROM categories ORDER BY name");
 ?>
 <!DOCTYPE html>
@@ -83,10 +78,8 @@ $categories = fetchAll("SELECT * FROM categories ORDER BY name");
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <?php include 'includes/navbar.php'; ?>
 
-    <!-- Filter Section -->
     <section class="filter-section">
         <div class="container">
             <form method="GET" class="row g-3 align-items-end">
@@ -118,7 +111,6 @@ $categories = fetchAll("SELECT * FROM categories ORDER BY name");
         </div>
     </section>
 
-    <!-- Gallery -->
     <section class="container mb-5">
         <div class="row">
             <?php foreach ($artworks as $artwork): ?>
@@ -161,7 +153,6 @@ $categories = fetchAll("SELECT * FROM categories ORDER BY name");
             <?php endforeach; ?>
         </div>
 
-        <!-- Pagination -->
         <?php if ($total_pages > 1): ?>
             <nav aria-label="Gallery navigation" class="mt-4">
                 <ul class="pagination justify-content-center">
@@ -177,7 +168,6 @@ $categories = fetchAll("SELECT * FROM categories ORDER BY name");
         <?php endif; ?>
     </section>
 
-    <!-- Footer -->
     <?php include 'includes/footer.php'; ?>
 </body>
 </html> 

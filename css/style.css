@@ -1,6 +1,4 @@
-/* Global Styles */
 :root {
-    /* Color variables */
     --primary: #0d6efd;
     --secondary: #6c757d;
     --success: #198754;
@@ -23,7 +21,6 @@ body {
     flex: 1;
 }
 
-/* Card Styles */
 .custom-card {
     border: none;
     border-radius: 0.35rem;
@@ -37,7 +34,6 @@ body {
     box-shadow: 0 0.15rem 2.5rem 0 rgba(58, 59, 69, 0.2);
 }
 
-/* Button Styles */
 .btn {
     font-weight: 600;
     padding: 0.75rem 1.25rem;
@@ -55,7 +51,6 @@ body {
     border-color: #2653d4;
 }
 
-/* Form Styles */
 .form-control {
     border-radius: 0.35rem;
     padding: 0.75rem 1rem;
@@ -73,7 +68,6 @@ body {
     color: var(--dark);
 }
 
-/* Navigation */
 .navbar {
     background: linear-gradient(to right, var(--primary), #224abe);
     box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
@@ -90,7 +84,6 @@ body {
     padding: 0.5rem 1rem !important;
 }
 
-/* Hero Section */
 .hero {
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/hero-bg.jpg');
     background-size: cover;
@@ -111,7 +104,6 @@ body {
     margin-bottom: 30px;
 }
 
-/* Image Styles */
 .artwork-image {
     height: 250px;
     object-fit: cover;
@@ -136,7 +128,6 @@ body {
     box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
 }
 
-/* Rating Stars */
 .rating-stars {
     display: inline-flex;
     gap: 5px;
@@ -154,7 +145,6 @@ body {
     color: #ffc107;
 }
 
-/* Category Badge */
 .category-badge {
     background-color: var(--primary);
     color: white;
@@ -170,7 +160,6 @@ body {
     color: white;
 }
 
-/* Section Styles */
 .section-title {
     position: relative;
     margin-bottom: 40px;
@@ -187,7 +176,6 @@ body {
     background-color: var(--primary);
 }
 
-/* Feature Cards */
 .feature-card {
     text-align: center;
     padding: 30px;
@@ -199,7 +187,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* Footer */
 .footer {
     background-color: var(--dark);
     color: white;
@@ -241,7 +228,6 @@ body {
     color: white;
 }
 
-/* Auth Pages */
 .auth-container {
     max-width: 400px;
     margin: 40px auto;
@@ -265,7 +251,6 @@ body {
     padding: 2rem;
 }
 
-/* Profile Page */
 .profile-header {
     background-color: white;
     padding: 30px;
@@ -303,7 +288,6 @@ body {
     font-size: 0.875rem;
 }
 
-/* Loading Animation */
 .loading {
     display: inline-block;
     width: 20px;
@@ -320,7 +304,6 @@ body {
     }
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .hero {
         padding: 60px 0;

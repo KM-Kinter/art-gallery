@@ -2,27 +2,22 @@
 require_once '../config.php';
 require_once '../includes/db.php';
 
-// Check if user is logged in and is an artist
 if (!isLoggedIn() || !isArtist()) {
     header('Location: ../login.php');
     exit;
 }
 
-// Initialize variables
 $error = '';
 $success = '';
 
-// Get categories for the form
 $categories = fetchAll("SELECT * FROM categories ORDER BY name");
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title'] ?? '');
     $description = trim($_POST['description'] ?? '');
     $category_id = (int)($_POST['category_id'] ?? 0);
     
     try {
-        // Validate input
         if (empty($title)) {
             throw new Exception("Please enter a title for your artwork.");
         }
@@ -35,19 +30,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Please select a category.");
         }
         
-        // Handle file upload
         if (!isset($_FILES['artwork']) || $_FILES['artwork']['error'] === UPLOAD_ERR_NO_FILE) {
             throw new Exception("Please select an image to upload.");
         }
         
         $file = $_FILES['artwork'];
         
-        // Validate file
         if ($file['error'] !== UPLOAD_ERR_OK) {
             throw new Exception("Error uploading file. Please try again.");
         }
         
-        // Check file type
         $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $file['tmp_name']);
@@ -57,22 +49,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Only JPG, PNG and GIF images are allowed.");
         }
         
-        // Generate unique filename
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = uniqid('artwork_') . '.' . $extension;
         $upload_path = '../uploads/artworks/' . $filename;
         
-        // Create directory if it doesn't exist
         if (!file_exists('../uploads/artworks')) {
             mkdir('../uploads/artworks', 0777, true);
         }
         
-        // Move uploaded file
         if (!move_uploaded_file($file['tmp_name'], $upload_path)) {
             throw new Exception("Error saving file. Please try again.");
         }
         
-        // Save to database
         executeQuery(
             "INSERT INTO artworks (title, description, file_path, artist_id, category_id, status, upload_date) 
              VALUES (?, ?, ?, ?, ?, 'pending', NOW())",
@@ -171,7 +159,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include '../includes/footer.php'; ?>
 
     <script>
-        // Image preview
         document.getElementById('artwork').addEventListener('change', function(e) {
             const preview = document.getElementById('preview');
             const file = e.target.files[0];

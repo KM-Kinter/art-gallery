@@ -2,7 +2,6 @@
 require_once 'config.php';
 require_once 'includes/db.php';
 
-// Get featured artworks
 $featured_artworks = fetchAll(
     "SELECT a.*, u.username, u.full_name, c.name as category_name,
             (SELECT AVG(rating) FROM ratings r WHERE r.artwork_id = a.artwork_id) as avg_rating
@@ -14,7 +13,6 @@ $featured_artworks = fetchAll(
      LIMIT 6"
 );
 
-// Get featured artists
 $featured_artists = fetchAll(
     "SELECT u.*, 
             (SELECT COUNT(*) FROM artworks a WHERE a.artist_id = u.user_id AND a.status = 'approved') as artwork_count,
@@ -89,7 +87,7 @@ $featured_artists = fetchAll(
 <body>
     <?php include 'includes/navbar.php'; ?>
 
-    <!-- Hero Section -->
+    
     <section class="hero-section text-center">
         <div class="container">
             <h1 class="display-4 mb-4">Welcome to <?php echo SITE_NAME; ?></h1>
@@ -107,7 +105,7 @@ $featured_artists = fetchAll(
         </div>
     </section>
 
-    <!-- Featured Artworks -->
+    
     <section class="container mb-5">
         <h2 class="text-center mb-4">Featured Artworks</h2>
         <div class="row">
@@ -150,7 +148,7 @@ $featured_artists = fetchAll(
         </div>
     </section>
 
-    <!-- Features Section -->
+    
     <section class="cta-section">
         <div class="container">
             <div class="row text-center">
@@ -179,7 +177,7 @@ $featured_artists = fetchAll(
         </div>
     </section>
 
-    <!-- Featured Artists -->
+    
     <section class="container mb-5">
         <h2 class="text-center mb-4">Featured Artists</h2>
         <div class="row">

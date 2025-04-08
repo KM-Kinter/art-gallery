@@ -2,7 +2,6 @@
 require_once 'config.php';
 require_once 'includes/db.php';
 
-// Check if user is logged in
 if (!isLoggedIn()) {
     header('Location: login.php');
     exit;
@@ -11,14 +10,12 @@ if (!isLoggedIn()) {
 $error = '';
 $success = '';
 
-// Get current user settings
 $settings = fetchOne(
     "SELECT * FROM user_profiles WHERE user_id = ?",
     [getCurrentUserId()],
     'i'
 );
 
-// If no settings exist, create default settings
 if (!$settings) {
     executeQuery(
         "INSERT INTO user_profiles (user_id, email_notifications, public_profile) VALUES (?, 1, 1)",
@@ -31,7 +28,6 @@ if (!$settings) {
     ];
 }
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $email_notifications = isset($_POST['email_notifications']) ? 1 : 0;
@@ -53,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Include header
 $pageTitle = "Settings";
 include 'includes/header.php';
 ?>
@@ -130,7 +125,6 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Delete Account Modal -->
 <div class="modal fade" id="deleteAccountModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">

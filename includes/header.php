@@ -10,17 +10,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="<?= SITE_URL ?>/css/style.css" rel="stylesheet">
+\    <link href="<?= SITE_URL ?>/css/style.css" rel="stylesheet">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="<?= SITE_URL ?>/images/favicon.png">
+\    <link rel="icon" type="image/png" href="<?= SITE_URL ?>/images/favicon.png">
 </head>
 <body>
     <?php include 'navbar.php'; ?>
     
     <main class="main-content">
-        <!-- Content will be injected here -->
-    </main>
+\    </main>
 </body>
 </html> 
