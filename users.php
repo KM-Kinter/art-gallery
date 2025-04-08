@@ -241,8 +241,6 @@ $pageTitle = "Manage Users";
             const menu = document.getElementById('menu-' + userId);
             menu.classList.toggle('show');
         }
-
-        // Close menu when clicking outside
         document.addEventListener('click', function(event) {
             if (!event.target.matches('.action-btn')) {
                 const menus = document.querySelectorAll('.action-menu');
